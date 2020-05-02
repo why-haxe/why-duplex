@@ -24,7 +24,7 @@ class WebSocketClient implements Client {
 				cb.invoke(Std.is(data, String) ? Chunk.ofString(data) : Chunk.ofBytes(Bytes.ofData(data)));
 			});
 			ws.removeEventListener.bind('message', onMessage);
-		});
+		}).until(disconnected);
 	}
 	
 	public function send(data:Chunk):Promise<Noise> {

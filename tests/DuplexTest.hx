@@ -1,16 +1,21 @@
 package;
 
-import why.duplex.websocket.WebSocketClient;
-import why.duplex.websocket.WebSocketServer;
+import why.duplex.*;
 
 using tink.CoreApi;
 
 @:asserts
-class WebSocketTest {
-	public function new() {}
+class DuplexTest {
+	final createServer:()->Promise<Server>;
+	final createClient:()->Promise<Client>;
+	
+	public function new(createServer, createClient) {
+		this.createServer = createServer;
+		this.createClient = createClient;
+	}
 	
 	public function test() {
-		WebSocketServer.bind({port: 8080})
+		createServer()
 			.next(server -> {
 				var serverLog = new StringBuf();
 				var clientLog = new StringBuf();
@@ -19,7 +24,7 @@ class WebSocketTest {
 					client.data.handle(chunk -> serverLog.add(chunk.toString() + ','));
 					client.send('welcome');
 				});
-				WebSocketClient.connect('ws://localhost:8080')
+				createClient()
 					.next(client -> {
 						client.data.handle(chunk -> clientLog.add(chunk.toString() + ','));
 						client.send('hello');
