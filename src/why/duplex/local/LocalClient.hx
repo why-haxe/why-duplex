@@ -14,9 +14,9 @@ class LocalClient implements Client {
 	final remote:LocalServer.ConnectedLocalClient;
 	
 	public function new(server:LocalServer) {
-		remote = server.add(this);
 		disconnected = _disconnected = Future.trigger();
 		data = _data = Signal.trigger();
+		remote = server.add(this);
 	}
 	
 	public static function connect(server:LocalServer):Promise<Client> {
@@ -29,9 +29,12 @@ class LocalClient implements Client {
 	}
 	
 	public function disconnect():Future<Noise> {
-		_data.clear();
-		_disconnected.trigger(None);
-		return Future.NOISE;
+		return Future.delay(0, Noise)
+			.map(function(v) {
+				_data.clear();
+				_disconnected.trigger(None);
+				return v;
+			});
 	}
 	
 	function receive(data:Chunk) {

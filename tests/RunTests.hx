@@ -14,8 +14,8 @@ class RunTests {
     Runner.run(TestBatch.make([
       new DuplexTest(WebSocketServer.bind.bind({port: 8080}), WebSocketClient.connect.bind('ws://localhost:8080')),
       {
-        var server = new LocalServer();
-        new DuplexTest(Promise.resolve.bind((server:Server)), LocalClient.connect.bind(server));
+        var server:LocalServer = null;
+        new DuplexTest(() -> Promise.resolve((server = new LocalServer():Server)), () -> LocalClient.connect(server));
       },
     ])).handle(Runner.exit);
   }

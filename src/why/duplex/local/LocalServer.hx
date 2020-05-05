@@ -6,16 +6,27 @@ import haxe.Timer;
 class LocalServer implements Server {
 	public final connected:Signal<Client>;
 	public final errors:Signal<Error>;
+
+	final clients:Array<Client>;
 	
 	final _connected:SignalTrigger<Client>;
 	
 	public function new() {
+		clients = [];
 		connected = _connected = Signal.trigger();
 		errors = Signal.trigger();
+	}
+
+	public function close() {
+		for(client in clients) client.disconnect();
+		_connected.clear();
+		return Future.NOISE;
 	}
 	
 	function add(client:LocalClient) {
 		var remote = new ConnectedLocalClient(client);
+		clients.push(remote);
+		remote.disconnected.handle(function(_) clients.remove(client));
 		Timer.delay(_connected.trigger.bind(remote), 0);
 		return remote;
 	}

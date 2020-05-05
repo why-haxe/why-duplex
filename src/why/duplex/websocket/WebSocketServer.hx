@@ -6,8 +6,11 @@ import haxe.Constraints.Function;
 class WebSocketServer implements Server {
 	public final connected:Signal<Client>;
 	public final errors:Signal<Error>;
-	
+	final server:NativeServer;
+
 	public function new(server:NativeServer) {
+		this.server = server;
+		
 		connected = new Signal(cb -> {
 			server.on('connection', function onConnect(socket) {
 				cb.invoke((new WebSocketClient(socket):Client));
@@ -20,6 +23,12 @@ class WebSocketServer implements Server {
 				cb.invoke(Error.ofJsError(e));
 			});
 			server.off.bind('error', onError);
+		});
+	}
+
+	public function close():Future<Noise> {
+		return Future.async(function(cb) {
+			server.close(cb.bind(Noise));
 		});
 	}
 	
