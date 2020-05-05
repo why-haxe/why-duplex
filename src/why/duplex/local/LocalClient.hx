@@ -1,7 +1,5 @@
 package why.duplex.local;
 
-import haxe.Timer;
-
 @:access(why.duplex.local)
 class LocalClient implements Client {
 	
@@ -38,11 +36,10 @@ class LocalClient implements Client {
 	}
 	
 	function receive(data:Chunk) {
-		return Future.async(function(cb) {
-			Timer.delay(function() {
+		return Future.delay(0, Noise)
+			.map(function(v) {
 				_data.trigger(data);
-				cb(Noise);
-			}, 0);
-		});
+				return v;
+			});
 	}
 }

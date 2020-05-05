@@ -1,7 +1,5 @@
 package why.duplex.local;
 
-import haxe.Timer;
-
 @:access(why.duplex.local)
 class LocalServer implements Server {
 	public final connected:Signal<Client>;
@@ -18,7 +16,7 @@ class LocalServer implements Server {
 	}
 
 	public function close() {
-		for(client in clients) client.disconnect();
+		while(clients.length > 0) clients.pop().disconnect();
 		_connected.clear();
 		return Future.NOISE;
 	}
@@ -27,7 +25,7 @@ class LocalServer implements Server {
 		var remote = new ConnectedLocalClient(client);
 		clients.push(remote);
 		remote.disconnected.handle(function(_) clients.remove(client));
-		Timer.delay(_connected.trigger.bind(remote), 0);
+		Callback.defer(_connected.trigger.bind(remote));
 		return remote;
 	}
 }
@@ -57,11 +55,10 @@ class ConnectedLocalClient implements Client {
 	}
 	
 	function receive(data:Chunk) {
-		return Future.async(function(cb) {
-			Timer.delay(function() {
+		return Future.delay(0, Noise)
+			.map(function(v) {
 				_data.trigger(data);
-				cb(Noise);
-			}, 0);
-		});
+				return v;
+			});
 	}
 }
