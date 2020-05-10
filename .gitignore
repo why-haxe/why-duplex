@@ -1,2 +1,4 @@
 bin/node/tests.js
+bin/js/*
+!bin/js/run.html
 node_modules
