@@ -13,10 +13,7 @@ class PeerJsClient implements Client {
 		this.conn = conn;
 		
 		disconnected = Future.async(function(cb) {
-			conn.on('error', function(e) {
-				trace(e);
-				cb(Some(Error.ofJsError(e)));
-			});
+			conn.on('error', function(e) cb(Some(Error.ofJsError(e))));
 			conn.on('close', function() cb(None));
 		});
 		
@@ -30,7 +27,6 @@ class PeerJsClient implements Client {
 	}
 	
 	public function send(data:Chunk):Promise<Noise> {
-		trace('send ${data.toString()}');
 		conn.send(data.toBytes().getData());
 		return Promise.NOISE;
 	}
