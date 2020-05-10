@@ -9,5 +9,6 @@ extern class Peer {
 	function off(event:String, f:Function):Dynamic;
 	function once(event:String, f:Function):Void;
 	function connect(id:String):DataConnection;
+	function destroy():Void;
 } 
 
