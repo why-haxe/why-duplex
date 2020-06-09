@@ -1,14 +1,13 @@
 {
-  "name": "why-duplex",
-  "license": "MIT",
-  "tags": [],
-  "classPath": "src",
-  "contributors": [
-    "kevinresol"
-  ],
-  "releasenote": "initial release",
-  "version": "0.0.0",
-  "dependencies": {
-    "tink_chunk": ""
-  }
+	"name": "why-duplex",
+	"license": "MIT",
+	"tags": [],
+	"classPath": "src",
+	"contributors": ["kevinresol"],
+	"releasenote": "initial release",
+	"version": "0.0.0",
+	"dependencies": {
+		"tink_core": "",
+		"tink_chunk": ""
+	}
 }
