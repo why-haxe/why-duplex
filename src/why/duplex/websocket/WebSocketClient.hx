@@ -21,7 +21,7 @@ class WebSocketClient implements Client {
 		data = new Signal(cb -> {
 			ws.addEventListener('message', function onMessage(event:{data:Any}) {
 				var data = event.data;
-				cb.invoke(Std.is(data, String) ? Chunk.ofString(data) : Chunk.ofBytes(Bytes.ofData(data)));
+				cb(Std.is(data, String) ? Chunk.ofString(data) : Chunk.ofBytes(Bytes.ofData(data)));
 			});
 			ws.removeEventListener.bind('message', onMessage);
 		}).until(disconnected);

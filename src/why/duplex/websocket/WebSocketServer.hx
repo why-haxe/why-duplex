@@ -20,14 +20,14 @@ class WebSocketServer implements Server {
 				untyped socket.unresponsive = 0;
 				untyped socket.on('pong', heartbeat);
 
-				cb.invoke((new WebSocketClient(socket) : Client));
+				cb((new WebSocketClient(socket) : Client));
 			});
 			server.off.bind('connection', onConnect);
 		});
 
 		errors = new Signal(cb -> {
 			server.on('error', function onError(e) {
-				cb.invoke(Error.ofJsError(e));
+				cb(Error.ofJsError(e));
 			});
 			server.off.bind('error', onError);
 		});

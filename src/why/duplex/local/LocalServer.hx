@@ -51,7 +51,7 @@ class ConnectedLocalClient implements Client {
 	}
 	
 	public function disconnect():Future<Noise> {
-		return remote.disconnect();
+		return remote.disconnect().eager();
 	}
 	
 	function receive(data:Chunk) {
